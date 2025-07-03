@@ -39,10 +39,24 @@ jobs:
             max-jobs = auto
             download-buffer-size = 500000000
             substituters = https://rishabh5321.cachix.org https://cache.nixos.org
-            trusted-public-keys = rishabh5321.cachix.org-1:mxfBIH2XElE6ieFXXYBA9Ame4mVTbAf1TGR843siggk= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            trusted-public-keys = rishabh5321.cachix.org-1:mxfBIH2XElE6ieFXXYBA9Ame4mVTbAf1TGR843siggk= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ1TGR843siggk=
+
+      - name: Check for new release
+        id: check_release
+        run: |
+          CURRENT_VERSION=$(grep -oP 'version = "\K[0-9.]+-dev\.[0-9]+' dev/package.nix)
+          LATEST_RELEASE=$(gh release view --json tagName --jq .tagName -R google-gemini/gemini-cli | sed 's/^v//')
+          echo "Current version: $CURRENT_VERSION"
+          echo "Latest release: $LATEST_RELEASE"
+          if [ "$(printf '%s\n' "$CURRENT_VERSION" "$LATEST_RELEASE" | sort -V | head -n 1)" = "$CURRENT_VERSION" ] && [ "$CURRENT_VERSION" != "$LATEST_RELEASE" ]; then
+            echo "NEW_RELEASE_AVAILABLE=true" >> $GITHUB_OUTPUT
+          else
+            echo "No new release available or current version is newer."
+          fi
 
       - name: Update dev package
         id: update_dev_package
+        if: steps.check_release.outputs.NEW_RELEASE_AVAILABLE == 'true'
         run: |
           nix profile install nixpkgs#nix-update
           nix-update --flake gemini-cli-dev || true # Allow failure if no update is needed
@@ -53,6 +67,7 @@ jobs:
           git diff --exit-code || echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
+        id: create_pr
         if: steps.git_status.outputs.UPDATE_NEEDED == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
