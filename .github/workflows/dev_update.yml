@@ -45,7 +45,7 @@ jobs:
         id: update_dev_package
         run: |
           nix profile install nixpkgs#nix-update
-          nix-update gemini-cli-dev || true # Allow failure if no update is needed
+          nix-update --flake gemini-cli-dev || true # Allow failure if no update is needed
 
       - name: Check for changes
         id: git_status
