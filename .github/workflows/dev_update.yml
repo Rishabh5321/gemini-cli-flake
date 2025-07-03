@@ -38,13 +38,6 @@ jobs:
             experimental-features = nix-command flakes
             max-jobs = auto
             download-buffer-size = 500000000
-            substituters = https://rishabh5321.cachix.org https://cache.nixos.org
-            trusted-public-keys = rishabh5321.cachix.org-1:mxfBIH2XElE6ieFXXYBA9Ame4mVTbAf1TGR843siggk= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ1TGR843siggk=
-
-      - name: Install Dependencies
-        run: |
-          nix profile install nixpkgs#gh
-          gh --version
 
       - name: Check for new release
         id: check_release
