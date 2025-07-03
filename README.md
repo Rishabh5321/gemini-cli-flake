@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![flake_check](https://github.com/Rishabh5321/gemini-cli-flake/actions/workflows/flake_build.yml/badge.svg)](https://github.com/Rishabh5321/gemini-cli-flake/actions/workflows/flake_build.yml)
 
-This repository provides a Nix flake for gemini-cli, an open-source media streaming app.
+This repository provides a Nix flake for gemini-cli.
 
 ## Table of Contents
 1. [Features](#features)
