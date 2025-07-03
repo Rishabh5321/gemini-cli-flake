@@ -14,7 +14,8 @@
     in
     {
       packages = forAllSystems ({ pkgs, ... }: {
-        default = pkgs.callPackage ./stable/package.nix { };
+        default = pkgs.callPackage ./dev/package.nix { };
+        gemini-cli-stable = pkgs.callPackage ./stable/package.nix { };
         gemini-cli-dev = pkgs.callPackage ./dev/package.nix { };
       });
 
