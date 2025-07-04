@@ -7,7 +7,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "gemini-cli";
-  version = "v0.1.9-nightly.250704.38fc1835";
+  version = "0.1.9-nightly.250704.38fc1835";
 
   src = fetchurl
     {
