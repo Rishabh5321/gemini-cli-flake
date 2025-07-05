@@ -24,9 +24,9 @@ The packages in this flake features
 
 `gemini-cli-stable` = currently it is only nix version
 
-`gemini-cli-dev` = Dev version with `dev` tag
+`gemini-cli-nightly` = Dev version with `nightly` tag
 
-`default` = Dev version
+`default` = nightly version
 
 ---
 
