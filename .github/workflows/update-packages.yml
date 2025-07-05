@@ -167,7 +167,7 @@ jobs:
             # Download the file and calculate the hash
             TEMP_FILE=$(mktemp)
             curl -L -o "$TEMP_FILE" "$DOWNLOAD_URL"
-            NEW_HASH=$(nix-hash --flat --base32 --type sha256 "$TEMP_FILE")
+            NEW_HASH=$(nix hash file --sri "$TEMP_FILE")
             rm "$TEMP_FILE"
 
             echo "New version: $LATEST_NIGHTLY_VERSION"
@@ -175,7 +175,7 @@ jobs:
 
             # Update pkgs/nightly/package.nix
             sed -i -E "s/^( *version *= *).*$/\1\"${LATEST_NIGHTLY_VERSION}\";/" pkgs/nightly/package.nix
-            sed -i -E "s/^( *hash *= *).*$/\1\"sha256-${NEW_HASH}\";/" pkgs/nightly/package.nix
+            sed -i -E "s/^( *hash *= *).*$/\1\"${NEW_HASH}\";/" pkgs/nightly/package.nix
             echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
           else
             echo "No new nightly release available or current version is newer."
