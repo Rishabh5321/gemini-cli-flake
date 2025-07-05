@@ -175,7 +175,7 @@ jobs:
 
             # Update pkgs/nightly/package.nix
             sed -i -E "s/^( *version *= *).*$/\1\"${LATEST_NIGHTLY_VERSION}\";/" pkgs/nightly/package.nix
-            sed -i -E "s/^( *hash *= *).*$/\1\"${NEW_HASH}\";/" pkgs/nightly/package.nix
+            sed -i -E "s/^( *hash *= *).*$/\1\"sha256-${NEW_HASH}\";/" pkgs/nightly/package.nix
             echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
           else
             echo "No new nightly release available or current version is newer."
