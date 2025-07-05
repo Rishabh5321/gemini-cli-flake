@@ -14,9 +14,10 @@
     in
     {
       packages = forAllSystems ({ pkgs, ... }: {
-        default = pkgs.callPackage ./dev/package.nix { };
-        gemini-cli-stable = pkgs.callPackage ./stable/package.nix { };
-        gemini-cli-dev = pkgs.callPackage ./dev/package.nix { };
+        default = pkgs.callPackage ./pkgs/nightly/package.nix { };
+        gemini-cli-stable = pkgs.callPackage ./pkgs/stable/package.nix { };
+        gemini-cli-nightly = pkgs.callPackage ./pkgs/nightly/package.nix { };
+        # gemini-cli-dev = pkgs.callPackage ./pkgs/dev/package.nix { };
       });
 
       # Optional: uncomment to enable devShell
