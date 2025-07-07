@@ -81,6 +81,7 @@ jobs:
               echo "UPDATE_NEEDED=false" >> "$GITHUB_OUTPUT"
             fi
           elif [ "$PACKAGE_TYPE" = "stable" ]; then
+            nix-env -iA nixpkgs.nix-prefetch-github
             LATEST_TAG=$(gh release list -R google-gemini/gemini-cli --limit 100 --json tagName | jq -r '[.[] | select(.tagName | test("nightly") | not)] | .[0].tagName')
             if [ -z "$LATEST_TAG" ]; then
               echo "No release found for $PACKAGE_TYPE."
@@ -101,7 +102,7 @@ jobs:
               sed -i "/npmDeps = pkgs.fetchNpmDeps/,\$ s|hash = \".*\"|hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/|" "$PACKAGE_FILE"
               echo "Building to get npmDeps hash..."
               BUILD_LOG=$(mktemp)
-              if ! nix-build .#gemini-cli > "$BUILD_LOG" 2>&1; then
+              if ! nix-build .#packages.x86_64-linux.gemini-cli > "$BUILD_LOG" 2>&1; then
                 echo "Build failed as expected. Extracting hash."
                 NPM_DEPS_HASH=$(grep 'got:' "$BUILD_LOG" | head -n 1 | sed -e 's/.*got: *//' -e 's/"//g')
                 if [ -z "$NPM_DEPS_HASH" ]; then
