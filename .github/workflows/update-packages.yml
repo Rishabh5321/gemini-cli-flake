@@ -99,7 +99,7 @@ jobs:
               echo "New src hash: $SRC_HASH"
               sed -i -E "s/version = \".*\"/version = \"$LATEST_VERSION\"/" "$PACKAGE_FILE"
               sed -i "/src = pkgs.fetchFromGitHub/,/npmDeps = pkgs.fetchNpmDeps/ s|hash = \".*\"|hash = \"$SRC_HASH\"|" "$PACKAGE_FILE"
-              sed -i "/npmDeps = pkgs.fetchNpmDeps/,\$ s|hash = \".*\"|hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/|" "$PACKAGE_FILE"
+              sed -i "/npmDeps = pkgs.fetchNpmDeps/,\$ s|hash = \".*\"|hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"|" "$PACKAGE_FILE"
               echo "Building to get npmDeps hash..."
               BUILD_LOG=$(mktemp)
               if ! nix build .#packages.x86_64-linux.gemini-cli-stable > "$BUILD_LOG" 2>&1; then
