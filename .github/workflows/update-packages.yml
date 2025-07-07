@@ -102,7 +102,7 @@ jobs:
               sed -i "/npmDeps = pkgs.fetchNpmDeps/,\$ s|hash = \".*\"|hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/|" "$PACKAGE_FILE"
               echo "Building to get npmDeps hash..."
               BUILD_LOG=$(mktemp)
-              if ! nix-build .#gemini-cli-stable > "$BUILD_LOG" 2>&1; then
+              if ! nix build .#gemini-cli-stable > "$BUILD_LOG" 2>&1; then
                 echo "Build failed as expected. Extracting hash."
                 NPM_DEPS_HASH=$(grep 'got:' "$BUILD_LOG" | head -n 1 | sed -e 's/.*got: *//' -e 's/"//g')
                 if [ -z "$NPM_DEPS_HASH" ]; then
