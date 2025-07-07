@@ -81,7 +81,6 @@ jobs:
               echo "UPDATE_NEEDED=false" >> "$GITHUB_OUTPUT"
             fi
           elif [ "$PACKAGE_TYPE" = "stable" ]; then
-            nix profile install nixpkgs#nix-prefetch-github
             LATEST_TAG=$(gh release list -R google-gemini/gemini-cli --limit 100 --json tagName | jq -r '[.[] | select(.tagName | test("nightly") | not)] | .[0].tagName')
             if [ -z "$LATEST_TAG" ]; then
               echo "No release found for $PACKAGE_TYPE."
@@ -95,6 +94,7 @@ jobs:
             if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
               echo "New version available. Updating..."
               echo "UPDATE_NEEDED=true" >> "$GITHUB_OUTPUT"
+              nix profile install nixpkgs#nix-prefetch-github
               SRC_HASH=$(nix-prefetch-github --rev "$LATEST_TAG" google-gemini gemini-cli | jq -r .hash)
               echo "New src hash: $SRC_HASH"
               sed -i -E "s/version = \".*\"/version = \"$LATEST_VERSION\"/" "$PACKAGE_FILE"
