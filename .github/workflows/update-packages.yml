@@ -81,7 +81,7 @@ jobs:
               echo "UPDATE_NEEDED=false" >> "$GITHUB_OUTPUT"
             fi
           elif [ "$PACKAGE_TYPE" = "stable" ]; then
-            nix-env -iA nixpkgs.nix-prefetch-github
+            nix profile install nixpkgs#nix-prefetch-github
             LATEST_TAG=$(gh release list -R google-gemini/gemini-cli --limit 100 --json tagName | jq -r '[.[] | select(.tagName | test("nightly") | not)] | .[0].tagName')
             if [ -z "$LATEST_TAG" ]; then
               echo "No release found for $PACKAGE_TYPE."
