@@ -1,59 +1,29 @@
 { lib
-, buildNpmPackage
-, fetchFromGitHub
-, fetchNpmDeps
+, stdenv
+, fetchurl
+, nodejs
 , writeShellApplication
-, cacert
-, curl
-, gnused
-, jq
-, nix-prefetch-github
-, prefetch-npm-deps
-, gitUpdater
-,
 }:
 
-buildNpmPackage (finalAttrs: {
+stdenv.mkDerivation (finalAttrs: {
   pname = "gemini-cli";
-  version = "0.1.7";
+  version = "0.1.10";
 
-  src = fetchFromGitHub {
-    owner = "google-gemini";
-    repo = "gemini-cli";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-DAenod/w9BydYdYsOnuLj7kCQRcTnZ81tf4MhLUug6c=";
-  };
+  src = fetchurl
+    {
+      url = "https://github.com/google-gemini/gemini-cli/releases/download/v${finalAttrs.version}/gemini.js";
+      hash = "sha256-QLPZT1Tok33z+9Dl6Hsb8Y2ssUEsuKroYSIYEteIsyk=";
+    };
 
-  npmDeps = fetchNpmDeps {
-    inherit (finalAttrs) src;
-    hash = "sha256-otogkSsKJ5j1BY00y4SRhL9pm7CK9nmzVisvGCDIMlU=";
-  };
-
-  preConfigure = ''
-    mkdir -p packages/generated
-    echo "export const GIT_COMMIT_INFO = { commitHash: '${finalAttrs.src.rev}' };" > packages/generated/git-commit.ts
-  '';
+  dontUnpack = true;
 
   installPhase = ''
-    runHook preInstall
-    mkdir -p $out/{bin,share/gemini-cli}
-
-    cp -r node_modules $out/share/gemini-cli/
-
-    rm -f $out/share/gemini-cli/node_modules/@google/gemini-cli
-    rm -f $out/share/gemini-cli/node_modules/@google/gemini-cli-core
-    cp -r packages/cli $out/share/gemini-cli/node_modules/@google/gemini-cli
-    cp -r packages/core $out/share/gemini-cli/node_modules/@google/gemini-cli-core
-
-    ln -s $out/share/gemini-cli/node_modules/@google/gemini-cli/dist/index.js $out/bin/gemini
-    runHook postInstall
+    mkdir -p $out/bin
+    cp $src $out/gemini.js
+    substituteInPlace $out/gemini.js --replace '#!/usr/bin/env node' '#!${nodejs}/bin/node'
+    chmod +x $out/gemini.js
+    ln -s $out/gemini.js $out/bin/gemini
   '';
-
-  postInstall = ''
-    chmod +x "$out/bin/gemini"
-  '';
-
-  passthru.updateScript = gitUpdater { };
 
   meta = {
     description = "AI agent that brings the power of Gemini directly into your terminal";
