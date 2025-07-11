@@ -155,7 +155,7 @@ jobs:
           echo "Current stable version: $CURRENT_VERSION"
 
           # Find the latest stable release tag
-          LATEST_STABLE_TAG=$(gh release view --json tagName --jq .tagName -R google-gemini/gemini-cli | sed 's/^v//')
+          LATEST_STABLE_TAG=$(gh release view --latest --json tagName --jq .tagName -R google-gemini/gemini-cli)
 
           if [ -z "$LATEST_STABLE_TAG" ]; then
             echo "No stable releases found."
@@ -170,7 +170,7 @@ jobs:
           if [ "$CURRENT_VERSION" != "$LATEST_STABLE_VERSION" ]; then
             echo "New stable release available. Updating..."
             # Construct the URL for gemini.js
-            DOWNLOAD_URL="https://github.com/google-gemini/gemini-cli/releases/download/v${LATEST_STABLE_TAG}/gemini.js"
+            DOWNLOAD_URL="https://github.com/google-gemini/gemini-cli/releases/download/${LATEST_STABLE_TAG}/gemini.js"
             echo "Downloading from: $DOWNLOAD_URL"
 
             # Download the file and calculate the hash
@@ -183,8 +183,8 @@ jobs:
             echo "New hash: $NEW_HASH"
 
             # Update pkgs/stable/package.nix
-            sed -i -E "s/^( *version *= *).*$/\1"${LATEST_STABLE_VERSION}";/" pkgs/stable/package.nix
-            sed -i -E "s/^( *hash *= *).*$/\1"${NEW_HASH}";/" pkgs/stable/package.nix
+            sed -i -E "s/^( *version *= *).*$/\1\"${LATEST_STABLE_VERSION}\";/" pkgs/stable/package.nix
+            sed -i -E "s/^( *hash *= *).*$/\1\"${NEW_HASH}\";/" pkgs/stable/package.nix
             echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
           else
             echo "No new stable release available or current version is newer."
