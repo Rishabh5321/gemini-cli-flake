@@ -1,7 +1,7 @@
 name: update-flakes
 on:
   schedule:
-    - cron: "0 * * * *" # Runs every hour
+    - cron: "0 */6 * * *" # Runs every 6 hours
   workflow_dispatch:
 
 permissions:
