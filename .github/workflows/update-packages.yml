@@ -86,9 +86,21 @@ jobs:
             echo "New version: $LATEST_VERSION"
             echo "New hash: $NEW_HASH"
 
-            # Use sed with a different delimiter to handle slashes in the hash
-            sed -i -E "s#^( *version *= *).*$#\1\"${LATEST_VERSION}\";#" "$PACKAGE_PATH"
-            sed -i -E "s#^( *hash *= *).*$#\1\"${NEW_HASH}\";#" "$PACKAGE_PATH"
+            # Use awk to avoid issues with special characters in the hash
+            awk -v new_version="$LATEST_VERSION" '
+              /version *= */ {
+                sub(/"[^"]*"/, "\"" new_version "\"");
+              }
+              { print }
+            ' "$PACKAGE_PATH" > "${PACKAGE_PATH}.tmp" && mv "${PACKAGE_PATH}.tmp" "$PACKAGE_PATH"
+
+            awk -v new_hash="$NEW_HASH" '
+              /hash *= */ {
+                sub(/"[^"]*"/, "\"" new_hash "\"");
+              }
+              { print }
+            ' "$PACKAGE_PATH" > "${PACKAGE_PATH}.tmp" && mv "${PACKAGE_PATH}.tmp" "$PACKAGE_PATH"
+
             echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
           else
             echo "No new ${{ matrix.package.name }} release available or current version is newer."
