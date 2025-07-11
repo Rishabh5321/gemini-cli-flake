@@ -154,8 +154,8 @@ jobs:
           CURRENT_VERSION=$(grep -oP 'version = "\K[0-9.]+' pkgs/stable/package.nix)
           echo "Current stable version: $CURRENT_VERSION"
 
-          # Find the latest stable release tag
-          LATEST_STABLE_TAG=$(gh release list -R google-gemini/gemini-cli --json tagName,isPrerelease --jq '.[] | select(.isPrerelease == false) | .tagName' | head -n 1)
+          # Find the latest stable release tag, excluding nightlies
+          LATEST_STABLE_TAG=$(gh release list -R google-gemini/gemini-cli --limit 100 --json tagName | jq -r '.[] | .tagName' | grep -v "nightly" | head -n 1)
 
           if [ -z "$LATEST_STABLE_TAG" ]; then
             echo "No stable releases found."
