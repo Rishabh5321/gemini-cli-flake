@@ -155,7 +155,7 @@ jobs:
           echo "Current stable version: $CURRENT_VERSION"
 
           # Find the latest stable release tag
-          LATEST_STABLE_TAG=$(gh release view --latest --json tagName --jq .tagName -R google-gemini/gemini-cli)
+          LATEST_STABLE_TAG=$(gh release list -R google-gemini/gemini-cli --json tagName,isPrerelease --jq '.[] | select(.isPrerelease == false) | .tagName' | head -n 1)
 
           if [ -z "$LATEST_STABLE_TAG" ]; then
             echo "No stable releases found."
