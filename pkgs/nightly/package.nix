@@ -20,7 +20,7 @@ stdenv.mkDerivation (finalAttrs: {
   installPhase = ''
     mkdir -p $out/bin
     cp $src $out/gemini.js
-    substituteInPlace $out/gemini.js --replace '#!/usr/bin/env node' '#!${nodejs}/bin/node'
+    substituteInPlace $out/gemini.js --replace '#!/usr/bin/env node' '#!${nodejs}/bin/node --no-deprecation'
     chmod +x $out/gemini.js
     ln -s $out/gemini.js $out/bin/gemini
   '';
