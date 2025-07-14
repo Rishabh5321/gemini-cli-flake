@@ -7,12 +7,12 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "gemini-cli";
-  version = "0.1.11-nightly.250713.4442e893";
+  version = "0.1.12-nightly.250714.b018e2d3";
 
   src = fetchurl
     {
       url = "https://github.com/google-gemini/gemini-cli/releases/download/v${finalAttrs.version}/gemini.js";
-      hash = "sha256-f7A9JSn3TpkRO7mDb4EWIpuj61MDy6XxEga5984l3lc=";
+      hash = "sha256-reNmxLNSBuX+vPxhD+m9mNytm1wV6H24wWCgJzX4rps=";
     };
 
   dontUnpack = true;
