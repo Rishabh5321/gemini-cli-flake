@@ -26,7 +26,7 @@ The packages in this flake features
 
 `gemini-cli-nightly` = Nightly Version
 
-`default` = Stable Version
+`default` = Nightly Version
 
 ---
 
