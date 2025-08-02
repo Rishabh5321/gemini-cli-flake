@@ -18,15 +18,15 @@ This repository provides a Nix flake for gemini-cli.
 ---
 
 ## Features
-- **Pre-built gemini-cli Package**: The flake provides a dev gemini-cli package for `x86_64-linux`.
+- **Pre-built gemini-cli Package**: The flake provides a Nightly and Stable gemini-cli package for `x86_64-linux`.
 
 The packages in this flake features
 
-`gemini-cli-stable` = currently it is only nix version
+`gemini-cli-stable` = Stable Version
 
-`gemini-cli-nightly` = Dev version with `nightly` tag
+`gemini-cli-nightly` = Nightly Version
 
-`default` = nightly version
+`default` = Stable Version
 
 ---
 

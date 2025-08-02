@@ -40,8 +40,8 @@ jobs:
       - name: Run flake check
         run: nix flake check
 
-  build_dev:
-    name: Build Dev
+  build_stable_compiled:
+    name: Build Stable Compiled
     needs: [nix_check_build]
     runs-on: ubuntu-latest
     steps:
@@ -66,7 +66,7 @@ jobs:
           name: rishabh5321
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
-      - name: Build Dev
+      - name: Build Compiled
         run: nix build .#gemini-cli
 
   build_stable:
