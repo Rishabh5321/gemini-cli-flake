@@ -25,7 +25,7 @@ jobs:
             jq_filter: 'select(.tagName | contains("nightly"))'
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5
 
       - name: Generate App Token
         id: generate_token
