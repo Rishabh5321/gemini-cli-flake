@@ -40,35 +40,6 @@ jobs:
       - name: Run flake check
         run: nix flake check
 
-  build_stable_compiled:
-    name: Build Stable Compiled
-    needs: [nix_check_build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
-          extra_nix_config: |
-            auto-optimise-store = true
-            experimental-features = nix-command flakes
-            max-jobs = auto
-            download-buffer-size = 500000000
-            substituters = https://rishabh5321.cachix.org https://cache.nixos.org
-            trusted-public-keys = rishabh5321.cachix.org-1:mxfBIH2XElE6ieFXXYBA9Ame4mVTbAf1TGR843siggk= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
-
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v16
-        with:
-          name: rishabh5321
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-
-      - name: Build Compiled
-        run: nix build .#gemini-cli
-
   build_stable:
     name: Build stable
     needs: [nix_check_build]
